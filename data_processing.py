@@ -9,8 +9,7 @@ import json
 
 # Conversion factors
 MeV = 0.001
-import os
-import pika
+
 
 # Environment variables for RabbitMQ (aligned with Kubernetes configuration)
 rabbitmq_host = os.getenv("RABBITMQ_HOST", "rabbitmq-service")
