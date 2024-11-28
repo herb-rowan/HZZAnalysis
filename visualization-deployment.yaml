@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visualization
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: visualization
+  template:
+    metadata:
+      labels:
+        app: visualization
+    spec:
+      containers:
+      - name: visualization
+        image: hzzanalysis:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: RABBITMQ_HOST
+          value: rabbitmq-service
+        - name: RABBITMQ_USER
+          value: guest
+        - name: RABBITMQ_PASS
+          value: guest
+        command: ["/bin/sh", "-c"]  # Use shell to combine commands
+        args: ["python /app/visualization.py && sleep infinity"]  # Run script, then keep container alive
+        volumeMounts:
+        - name: data-volume
+          mountPath: /app/data
+      volumes:
+      - name: data-volume
+        emptyDir: {}

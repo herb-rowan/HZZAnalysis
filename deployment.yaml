@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: particle-analysis
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: particle-analysis
+  template:
+    metadata:
+      labels:
+        app: particle-analysis
+    spec:
+      containers:
+      - name: particle-analysis
+        image: hzzanalysis:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000 # Adjust based on your application
+        env:
+        - name: RABBITMQ_HOST
+          value: rabbitmq-service
+        - name: RABBITMQ_USER
+          value: guest
+        - name: RABBITMQ_PASS
+          value: guest
+        volumeMounts:
+        - name: data-volume
+          mountPath: /app/data
+      volumes:
+      - name: data-volume
+        emptyDir: {}

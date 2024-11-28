@@ -1,0 +1,13 @@
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: particle-analysis-service
+spec:
+  selector:
+    app: particle-analysis
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000 # Match the container port
+  type: ClusterIP
