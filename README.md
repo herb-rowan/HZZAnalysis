@@ -11,6 +11,9 @@ This project demonstrates a containerized, distributed system for analyzing ATLA
 4. [Running the Program](#running-the-program)  
 5. [Monitoring and Troubleshooting](#monitoring-and-troubleshooting)  
 6. [Accessing Results](#accessing-results)  
+7. [Test Scalability with Multiple Virtual Nodes](#test-scalability-with-multiple-virtual-nodes)  
+8. [Cleaning Up](#cleaning-up)  
+9. [Future Enhancements](#future-enhancements)  
 
 ---
 
@@ -47,9 +50,9 @@ cd higgs-analysis
 ---
 
 ### **2. Start Minikube**
-Start your local Kubernetes cluster using Minikube:
+Start your local Kubernetes cluster using Minikube with multiple nodes to simulate a distributed environment:
 ```bash
-minikube start --nodes=2
+minikube start --nodes=3
 ```
 
 ---
@@ -189,8 +192,69 @@ ls /app/data
 
 ---
 
+## **Test Scalability with Multiple Virtual Nodes**
+
+### **1. Set Up Minikube with Multiple Nodes**
+Minikube allows you to run a Kubernetes cluster with multiple nodes. To simulate a distributed environment:
+
+```bash
+minikube start --nodes=3
+```
+
+This starts a Kubernetes cluster with 3 virtual nodes. You can scale your application and test how it behaves across multiple nodes.
+
+---
+
+### **2. Verify Node Availability**
+Check the status of the nodes in the cluster:
+
+```bash
+kubectl get nodes
+```
+
+You should see the nodes listed, with one of them being the master node and the others being worker nodes.
+
+---
+
+### **3. Scale Deployments Across Nodes**
+You can scale your deployments across the nodes:
+```bash
+kubectl scale deployment data-acquisition --replicas=3
+kubectl scale deployment data-processing --replicas=3
+kubectl scale deployment visualization --replicas=3
+```
+
+After scaling, use the following command to check where the Pods are scheduled:
+
+```bash
+kubectl get pods -o wide
+```
+
+The Pods will be distributed across the available nodes.
+
+---
+
+### **4. Load Testing**
+To simulate real-world traffic and test how the application handles load, you can use a tool like `hey`:
+
+1. Find the Minikube service URL:
+   ```bash
+   minikube service <service-name> --url
+   ```
+
+2. Run `hey` to generate load:
+   ```bash
+   hey -z 60s -c 10 http://<minikube-ip>:<service-port>
+   ```
+
+---
+
 ## **Cleaning Up**
-To remove all resources:
+
+After running and testing the program, you can clean up the resources by deleting the deployments and stopping Minikube:
+
+### **1. Clean Up Kubernetes Resources**
+To delete all resources:
 ```bash
 kubectl delete deployment --all
 kubectl delete svc --all
@@ -198,7 +262,8 @@ kubectl delete pvc --all
 kubectl delete pv --all
 ```
 
-Stop Minikube:
+### **2. Stop Minikube**
+Stop Minikube when you're done:
 ```bash
 minikube stop
 ```
