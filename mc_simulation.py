@@ -8,10 +8,6 @@ import awkward as ak
 import vector
 import numpy as np
 
-import os
-import pika
-import logging
-
 logger = logging.getLogger(__name__)
 
 # Environment variables for RabbitMQ
