@@ -40,7 +40,7 @@ Before running this program, ensure you have the following:
 ### **1. Clone the Repository**
 Clone the project to your local machine:
 ```bash
-git clone https://github.com/your-repository/higgs-analysis.git
+git clone https://github.com/herb-rowan/HZZAnalysis.git
 cd higgs-analysis
 ```
 
